@@ -1,33 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DestroyMine : MonoBehaviour
+
+namespace DestroyMine
 {
-    #region Fields 
-
-    [SerializeField] private int _damage = 3;
-
-    #endregion
-
-
-    #region UnityMethods
-     
-    private void OnTriggerEnter(Collider other)
+    public class DestroyMine : MonoBehaviour
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        #region Fields 
+
+        private float _startOffset = 0.5f;
+        private Rigidbody _mine;
+
+        [SerializeField] private int _damage = 3;
+        [SerializeField] private float _explosionForce = 100.0f;
+        [SerializeField] private float _explosionRadius = 3.0f;
+
+        #endregion
+
+
+        #region UnityMethods
+
+        private void OnTriggerEnter(Collider other)
         {
-            var enemy = other.GetComponent<Enemy>();
-            enemy.Hurt(_damage);
-            Destroy(gameObject);
+            var startRaycasstPosition = CalculateOffSet(transform.position);
+
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                Vector3 explosionPos = transform.position;
+                Collider[] colliders = Physics.OverlapSphere(explosionPos, _explosionRadius);
+
+                foreach (Collider hit in colliders)
+                {
+                    Rigidbody rb = hit.GetComponent<Rigidbody>();
+
+                    if (rb != null)
+                        rb.AddExplosionForce(_explosionForce, explosionPos, _explosionRadius, 3.0F);
+                }
+
+                var enemy = other.GetComponent<EnemyDiscription.Enemy>();
+                enemy.Hurt(_damage);
+                Destroy(gameObject);
+            }
+            if (other.gameObject.CompareTag("Tower"))
+            {
+                var enemy = other.GetComponent<TowerDescription.Tower>();
+
+                enemy.Hurt(_damage);
+                Destroy(gameObject);
+            }
         }
-        if (other.gameObject.CompareTag("Tower"))
+
+        #endregion
+
+        private Vector3 CalculateOffSet(Vector3 position)
         {
-            var enemy = other.GetComponent<Tower>();
-            enemy.Hurt(_damage);
-            Destroy(gameObject);
+            position.y += _startOffset;
+            return position;
         }
     }
-
-    #endregion
 }

@@ -1,26 +1,41 @@
 ﻿using UnityEngine;
 
-public class DoorOpen : MonoBehaviour
+
+namespace Door
 {
-    #region Fields
-     
-    [SerializeField] private GameObject _door;
-
-    #endregion
-     
-
-    #region UnityMethods
-
-    private void OnTriggerEnter(Collider coll)
+    public class DoorOpen : MonoBehaviour
     {
-        if (coll.gameObject.CompareTag("Player"))
-        {
-            _door.transform.position = transform.position; 
-            _door.transform.rotation = transform.rotation;
-            Destroy(gameObject);
-            print($"Enter {coll.name}");
-        }
-    }
+        #region Fields
+         
+        private float _timeOpen;
 
-    #endregion
+        [SerializeField] private GameObject _door;
+        [SerializeField] private GameObject _sounder;
+
+        [SerializeField] private float _openDelay = 1.0f;
+         
+        #endregion
+
+
+        #region UnityMethods
+
+        private void OnTriggerStay(Collider coll)
+        {
+            if (coll.gameObject.CompareTag("Player"))
+            {
+                _timeOpen += Time.deltaTime;
+                Instantiate(_sounder, transform.position, transform.rotation);
+
+                if (_timeOpen >= _openDelay)
+                {
+                    _door.transform.position = transform.position;
+                    _door.transform.rotation = transform.rotation;
+
+                    Destroy(gameObject);
+                }
+            }
+        }
+
+        #endregion
+    }
 }

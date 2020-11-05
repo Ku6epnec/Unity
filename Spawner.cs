@@ -1,25 +1,29 @@
 ﻿using UnityEngine;
 
-public class Spawner : MonoBehaviour
+
+namespace Spawn
 {
-    #region Fields
-     
-    [SerializeField] private GameObject _ghostWalker;
-
-    #endregion
-
-
-    #region UnityMethods
-     
-    private void OnTriggerEnter(Collider coll)
+    public class Spawner : MonoBehaviour
     {
-        if (coll.gameObject.CompareTag("Player"))
-        {
-            Instantiate(_ghostWalker, transform.position, transform.rotation);
-            print($"Enter {coll.name}");
-            Destroy(gameObject);
-        }
-    }
+        #region Fields
 
-    #endregion
+        [SerializeField] private GameObject _ghostWalker;
+
+        #endregion
+
+
+        #region UnityMethods
+
+        private void OnTriggerEnter(Collider coll)
+        {
+            if (coll.gameObject.CompareTag("Player"))
+            {
+                Instantiate(_ghostWalker, transform.position, transform.rotation);
+                print($"Enter {coll.name}");
+                Destroy(gameObject);
+            }
+        }
+
+        #endregion
+    }
 }

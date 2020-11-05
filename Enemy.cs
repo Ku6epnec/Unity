@@ -1,77 +1,81 @@
 ﻿using UnityEngine;
 
-public class Enemy : MonoBehaviour
+
+namespace EnemyDiscription
 {
-    #region Fields 
-     
-    [SerializeField] private int _health = 3;
-    [SerializeField] private float _moveSpeed = 1.0f;
-    [SerializeField] private float _speedRotation = 1;
-    [SerializeField] private int _damage = 2;
-    [SerializeField] private float _hitDelay = 2;
-    [SerializeField] private GameObject _sounder;
-
-    #endregion
-
-
-    #region Fields
-     
-    private float _timeHit;
-    private Transform _target;
-
-    #endregion
-
-
-    #region ClassLifeCycles
-     
-    public void Hurt(int damage)
+    public class Enemy : MonoBehaviour
     {
-        print("Ouch: " +damage) ;
+        #region Fields 
 
-        _health -= damage; ;
+        [SerializeField] private GameObject _sounder;
 
-        if (_health <= 0)
+        [SerializeField] private int _health = 3;
+        [SerializeField] private int _damage = 2;
+
+        [SerializeField] private float _moveSpeed = 1.0f;
+        [SerializeField] private float _speedRotation = 1.0f;
+        [SerializeField] private float _hitDelay = 2.0f;
+
+        private GameObject _player;
+
+        public Rigidbody _enemyRigidBody;
+
+        private float _timeHit;
+        private Transform _target;
+
+        #endregion
+
+
+        #region UnityMethods
+
+        private void Start()
         {
-            Die();
-        }
-    }
-     
-    private void Die()
-    {
-        Destroy(gameObject);
-        Instantiate(_sounder, transform.position, transform.rotation);
-    }
+            _player = GameObject.FindGameObjectWithTag("Player");
+        } 
 
-    #endregion
-
-
-    #region UnityMethods
-     
-    void Update()
-    {
-        _timeHit += Time.deltaTime;
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        _target = player.transform;
-        Vector3 targetDir = _target.position - transform.position;
-
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir,
-        _speedRotation * Time.deltaTime, 0.0F);
-        Debug.DrawRay(transform.position, newDir, Color.red);
-
-        transform.rotation = Quaternion.LookRotation(newDir);
-
-        transform.position += _moveSpeed * transform.forward * Time.deltaTime;
-    }
-     
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player") && (_hitDelay < _timeHit))
+        void Update()
         {
-            var player = other.GetComponent<FirstScript>();
-            player.Hurt(_damage);
+            _timeHit += Time.deltaTime;
+            _target = _player.transform;
+
+            Vector3 targetDir = _target.position - transform.position;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, _speedRotation * Time.deltaTime, 0.0F);
+             
+            Debug.DrawRay(transform.position, newDir, Color.red);
+            transform.rotation = Quaternion.LookRotation(newDir);
+            transform.position += _moveSpeed * transform.forward * Time.deltaTime;
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Player") && (_hitDelay < _timeHit))
+            {
+                var player = other.GetComponent<Player.FirstScript>();
+                player.Hurt(_damage);
+            }
+        }
+
+        #endregion
+
+
+        #region Methods
+        public void Hurt(int damage)
+        {
+            print("Ouch: " + damage);
+
+            _health -= damage; ;
+
+            if (_health <= 0)
+            {
+                Die();
+            }
+        }
+
+        private void Die()
+        {
+            Destroy(gameObject);
+            Instantiate(_sounder, transform.position, transform.rotation);
+        }
+        #endregion
     }
-     
-    #endregion
 }

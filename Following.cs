@@ -1,32 +1,36 @@
 ﻿using UnityEngine;
 
-public class Following : MonoBehaviour
+
+namespace Follow
 {
-    #region PrivateData
-
-    private Vector3 _offset;
-
-    #endregion
-     
-     
-    #region Fields
-
-    [SerializeField] private GameObject _player;
-
-    #endregion
-
-
-    #region UnityMethods
-
-    void Start()
+    public class Following : MonoBehaviour
     {
-        _offset = transform.position - _player.transform.position;
-    }
+        #region PrivateData
 
-    void Update()
-    {
-        transform.position = _player.transform.position + _offset;
+        private Vector3 _offset;
+
+        #endregion
+
+
+        #region Fields
+
+        [SerializeField] private GameObject _player;
+
+        #endregion
+
+
+        #region UnityMethods
+
+        void Start()
+        {
+            _offset = transform.position - _player.transform.position;
+        }
+
+        void Update()
+        {
+            transform.position = _player.transform.position + _offset;
+        }
+
+        #endregion
     }
-     
-    #endregion
 }

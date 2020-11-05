@@ -1,20 +1,24 @@
 ﻿using UnityEngine;
 
-public class Sounder : MonoBehaviour
+
+namespace Sound
 {
-    #region Fields
-     
-    [SerializeField] private float _lifeTime = 2.0f;
-
-    #endregion
-
-
-    #region UnityMethods
-     
-    void Start()
+    public class Sounder : MonoBehaviour
     {
-        Destroy(gameObject, _lifeTime);
-    }
+        #region Fields
 
-    #endregion
+        [SerializeField] private float _lifeTime = 2.0f;
+
+        #endregion
+
+
+        #region UnityMethods
+
+        void Start()
+        {
+            Destroy(gameObject, _lifeTime);
+        }
+
+        #endregion
+    }
 }

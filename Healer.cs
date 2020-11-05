@@ -1,25 +1,29 @@
 ﻿using UnityEngine;
 
-public class Healer : MonoBehaviour
+
+namespace HealPoint
 {
-    #region Fields
-     
-    [SerializeField] private int _heal = 5;
-
-    #endregion
-
-
-    #region UnityMethods
-     
-    private void OnTriggerEnter(Collider other)
+    public class Healer : MonoBehaviour
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            var player = other.GetComponent<FirstScript>();
-            player.Heal(_heal);
-            Destroy(gameObject);
-        }
-    }
+        #region Fields
 
-    #endregion
+        [SerializeField] private int _heal = 5;
+
+        #endregion
+
+
+        #region UnityMethods
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                var player = other.GetComponent<Player.FirstScript>();
+                player.Heal(_heal);
+                Destroy(gameObject);
+            }
+        }
+
+        #endregion
+    }
 }
